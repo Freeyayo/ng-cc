@@ -27,7 +27,8 @@ async function startApolloServer() {
   const app: Application = express();
 
   //   const server: ApolloServer = new ApolloServer(config);
-  const server: ApolloServer = new ApolloServer({ schema });
+  //   const server: ApolloServer = new ApolloServer({ schema });
+  const server: ApolloServer = new ApolloServer({ schema, mocks: true });
   await server.start();
   server.applyMiddleware({
     app,
