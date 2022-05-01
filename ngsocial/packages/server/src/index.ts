@@ -4,7 +4,11 @@ import cors from "cors";
 import schema from "./graphql/schema";
 import { ApolloServer } from "apollo-server-express";
 import casual from "casual";
-// import { IResolvers } from "@graphql-tools/utils";
+import "reflect-metadata";
+import { createConnection, Connection } from "typeorm";
+// import { IResolvers } from "@graphql-tools/utils";x
+
+const connection: Promise<Connection> = createConnection();
 
 const postsIds: string[] = [];
 const usersIds: string[] = [];
@@ -89,13 +93,13 @@ async function startApolloServer() {
   app.use(cors());
 
   //   const server: ApolloServer = new ApolloServer(config);
-  //   const server: ApolloServer = new ApolloServer({ schema });
+  const server: ApolloServer = new ApolloServer({ schema });
   //   const server: ApolloServer = new ApolloServer({ schema, mocks: true });
-  const server: ApolloServer = new ApolloServer({
-    schema,
-    mocks,
-    mockEntireSchema: false,
-  });
+  //   const server: ApolloServer = new ApolloServer({
+  //     schema,
+  //     mocks,
+  //     mockEntireSchema: false,
+  //   });
   await server.start();
   server.applyMiddleware({
     app,
@@ -108,7 +112,14 @@ async function startApolloServer() {
 }
 
 // startApolloServer(config);
-startApolloServer();
+// startApolloServer();
+connection
+  .then(() => {
+    startApolloServer();
+  })
+  .catch((error) => {
+    console.log("Database connection error", error);
+  });
 
 // const PORT = 8080;
 // const app: Application = express();
