@@ -16,4 +16,5 @@ export class User {
   @Column({ nullable: true }) image: string;
   @Column({ nullable: true }) coverImage: string;
   @Column({ default: 0 }) postCount: number;
+  @CreateDateColumn() createdAt: Date;
 }
