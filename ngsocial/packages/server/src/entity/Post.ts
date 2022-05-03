@@ -5,6 +5,11 @@ import {
   CreateDateColumn,
 } from "typeorm";
 
+import { OneToOne, OneToMany, ManyToOne, JoinColumn } from "typeorm";
+import { User } from "./User";
+import { Comment } from "./Comment";
+import { Like } from "./Like";
+
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn() id: number;
@@ -15,4 +20,15 @@ export class Post {
   @Column({ default: "" }) latestLike: number;
   @CreateDateColumn() createdAt: Date;
   @Column({ default: false }) likedByAuthUser: boolean;
+
+  @OneToOne((type) => Comment, (comment) => comment.post, {
+    onDelete: "SET NULL",
+  })
+  @JoinColumn()
+  latestComment: Comment;
+  @ManyToOne((type) => User, (user) => user.posts, { onDelete: "CASCADE" })
+  author: User;
+  @OneToMany((type) => Comment, (comment) => comment.post)
+  comments: Comment[];
+  @OneToMany((type) => Like, (like) => like.post) likes: Like[];
 }
